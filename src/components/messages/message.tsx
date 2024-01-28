@@ -4,7 +4,9 @@ import {Message} from "../../types";
 const Message: React.FC = () => {
 
     const [messages, setMessages] = useState<Message[]>([]);
-    const [lastMessages, setLastMessages] = useState('')
+    const [lastMessages, setLastMessages] = useState('');
+    const [newMessage, setNewMessage] = useState('');
+    const [author, setAuthor] = useState('User');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -28,6 +30,26 @@ const Message: React.FC = () => {
         } catch (error) {
             console.error('error message');
         }
+
+        const url = 'http://146.185.154.90:8000/messages';
+
+        const data = new URLSearchParams();
+        data.set('message', newMessage)
+        data.set('author', author);
+
+        try {
+            const response = await fetch(url, {
+                method: 'post',
+                body: data,
+            });
+
+            const sentMessage: Message = await response.json();
+            setMessages((prevMessages) => [...prevMessages, sentMessage]);
+            setNewMessage('');
+        } catch (err) {
+            console.error('Wrong sending message');
+        }
+
     }
 
     return (
