@@ -15,6 +15,9 @@ const Message: React.FC = () => {
 
     const fetchMessages = async () => {
         try {
+            const params = new URLSearchParams();
+            params.set('datetime', lastMessages)
+
             const response = await fetch(`http://146.185.154.90:8000/messages?datetime=${lastMessages}`);
             const newMessages: Message[] = await response.json()
             setMessages((prevMessages) => [...prevMessages, ...newMessages]);
